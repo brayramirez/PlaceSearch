@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlaceListViewController">
+            <connections>
+                <outlet property="placesTable" destination="Axu-6P-FbQ" id="Bjg-Rf-B5Q"/>
+                <outlet property="searchBar" destination="NsH-M8-jBR" id="bi8-UI-VGp"/>
+                <outlet property="view" destination="iN0-l3-epB" id="bet-x8-8GS"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="NsH-M8-jBR">
+                    <rect key="frame" x="0.0" y="64" width="600" height="44"/>
+                    <textInputTraits key="textInputTraits"/>
+                </searchBar>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Axu-6P-FbQ">
+                    <rect key="frame" x="0.0" y="108" width="600" height="492"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="aPE-S0-Bfh"/>
+                        <outlet property="delegate" destination="-1" id="Ore-qS-CJJ"/>
+                    </connections>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstItem="NsH-M8-jBR" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="64" id="A6H-2M-a94"/>
+                <constraint firstItem="Axu-6P-FbQ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="BOD-ul-WG3"/>
+                <constraint firstAttribute="centerX" secondItem="NsH-M8-jBR" secondAttribute="centerX" id="EVq-P6-ry5"/>
+                <constraint firstItem="NsH-M8-jBR" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="MH3-qQ-mTD"/>
+                <constraint firstAttribute="bottom" secondItem="Axu-6P-FbQ" secondAttribute="bottom" id="Omf-EL-pZ3"/>
+                <constraint firstItem="Axu-6P-FbQ" firstAttribute="top" secondItem="NsH-M8-jBR" secondAttribute="bottom" id="TGn-hu-ZTU"/>
+                <constraint firstItem="Axu-6P-FbQ" firstAttribute="top" secondItem="NsH-M8-jBR" secondAttribute="bottom" id="YUx-XM-Gq0"/>
+                <constraint firstAttribute="trailing" secondItem="Axu-6P-FbQ" secondAttribute="trailing" id="YnK-mt-uh6"/>
+                <constraint firstAttribute="trailing" secondItem="NsH-M8-jBR" secondAttribute="trailing" id="dV4-SD-vxK"/>
+                <constraint firstAttribute="centerX" secondItem="Axu-6P-FbQ" secondAttribute="centerX" id="zdK-7h-iKO"/>
+            </constraints>
+        </view>
+    </objects>
+</document>
