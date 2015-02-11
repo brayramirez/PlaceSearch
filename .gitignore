@@ -1,5 +1,10 @@
 # Xcode
 #
+
+PlaceSearch/keys.plist
+GoogleMaps.framework
+GoogleMaps.bundle
+
 build/
 *.pbxuser
 !default.pbxuser

@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <GoogleMaps/GoogleMaps.h>
 
 @interface AppDelegate ()
 
@@ -17,6 +18,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [GMSServices provideAPIKey:[self getGoogleApiKey]];
+    
     return YES;
 }
 
@@ -40,6 +43,15 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+
+#pragma mark - Google API Key
+- (NSString *)getGoogleApiKey {
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"keys" ofType:@"plist"];
+    NSDictionary *keys = [[NSDictionary alloc] initWithContentsOfFile:path];
+    
+    return keys[@"Google API Key"];
 }
 
 @end

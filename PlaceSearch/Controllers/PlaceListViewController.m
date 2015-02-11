@@ -6,9 +6,10 @@
 //  Copyright (c) 2015 Braymon Ramirez. All rights reserved.
 //
 
-#import "PlaceListViewController.h"
 #import <AFNetworking.h>
 #import <CoreLocation/CoreLocation.h>
+#import "PlaceListViewController.h"
+#import "MapDisplayViewController.h"
 
 
 @interface PlaceListViewController () <CLLocationManagerDelegate, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
@@ -16,7 +17,7 @@
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) NSMutableDictionary *currentLocation;
 @property (nonatomic, strong) NSMutableArray *places;
-//@property (nonatomic, strong) IBOutlet UITapGestureRecognizer *tapGestureRecognizer;
+@property (nonatomic, strong) NSString *apiKey;
 @property (nonatomic, weak) IBOutlet UISearchBar *searchBar;
 @property (nonatomic, weak) IBOutlet UITableView *placesTable;
 
@@ -25,11 +26,13 @@
 @implementation PlaceListViewController
 
 static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-static const NSString *API_KEY = @"&key=AIzaSyC--EoEEeqEKhDQTTGBpm4HUkAmWKNxGsk";
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setTitle:@"Place Search"];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
+    
     [self.searchBar becomeFirstResponder];
     self.searchBar.delegate = self;
 //    self.tapGestureRecognizer.delegate = self;
@@ -65,11 +68,14 @@ static const NSString *API_KEY = @"&key=AIzaSyC--EoEEeqEKhDQTTGBpm4HUkAmWKNxGsk"
 }
 
 
-//- (UITapGestureRecognizer *)tapGestureRecognizer {
-//    if (!_tapGestureRecognizer) _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
-//    return _tapGestureRecognizer;
-//}
-
+- (NSString *)apiKey {
+    if (!_apiKey) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"keys" ofType:@"plist"];
+        NSDictionary *keys = [[NSDictionary alloc] initWithContentsOfFile:path];
+        _apiKey = keys[@"Google API Key"];
+    }
+    return _apiKey;
+}
 
 #pragma mark - Location
 - (void)updateLocation {
@@ -126,8 +132,8 @@ static const NSString *API_KEY = @"&key=AIzaSyC--EoEEeqEKhDQTTGBpm4HUkAmWKNxGsk"
 
 - (void)searchPlace:(NSString *)query {
     query = [NSString stringWithFormat:@"&keyword=%@", query];
-    NSString *locationQuery = [NSString stringWithFormat:@"location=%@,%@&radius=500", self.currentLocation[@"latitude"], self.currentLocation[@"longitude"]];
-    NSString *queryString = [NSString stringWithFormat:@"%@%@%@%@", BASE_URL, locationQuery, query, API_KEY];
+    NSString *locationQuery = [NSString stringWithFormat:@"location=%@,%@&radius=300", self.currentLocation[@"latitude"], self.currentLocation[@"longitude"]];
+    NSString *queryString = [NSString stringWithFormat:@"%@%@%@&key=%@", BASE_URL, locationQuery, query, self.apiKey];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:queryString]];
 
 //    NSLog(@"query: %@", queryString);
@@ -191,7 +197,11 @@ static const NSString *API_KEY = @"&key=AIzaSyC--EoEEeqEKhDQTTGBpm4HUkAmWKNxGsk"
     NSIndexPath *indexPath = [self.placesTable indexPathForCell:(UITableViewCell *)recognizer.view];
     NSDictionary *data = [self.places objectAtIndex:indexPath.row];
 
-    NSLog(@"CellData: %@", data);
+//    NSLog(@"CellData: %@", data);
+    
+    MapDisplayViewController *mapDisplayViewController = [[MapDisplayViewController alloc] init];
+    [mapDisplayViewController setLocation:data];
+    [self.navigationController pushViewController:mapDisplayViewController animated:YES];
 }
 
 

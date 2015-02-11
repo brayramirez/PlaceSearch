@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "PlaceListViewController.h"
+#import "MapDisplayViewController.h"
 
 @interface ViewController ()
 
@@ -22,8 +23,10 @@
 
 
 - (void)viewDidAppear:(BOOL)animated {
-    PlaceListViewController *placeList = [[PlaceListViewController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:placeList];
+    PlaceListViewController *rootController = [[PlaceListViewController alloc] init];
+//    MapDisplayViewController *rootController = [[MapDisplayViewController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:rootController];
+    
     [self presentViewController:nav animated:YES completion:nil];
 }
 
