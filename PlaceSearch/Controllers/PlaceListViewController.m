@@ -8,8 +8,11 @@
 
 #import <AFNetworking.h>
 #import <CoreLocation/CoreLocation.h>
+#import <CoreData+MagicalRecord.h>
 #import "PlaceListViewController.h"
 #import "MapDisplayViewController.h"
+#import "BookmarkViewController.h"
+#import "Bookmark.h"
 
 
 @interface PlaceListViewController () <CLLocationManagerDelegate, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
@@ -30,12 +33,15 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     [self setTitle:@"Place Search"];
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
+    UIBarButtonItem *bookmarkButton = [[UIBarButtonItem alloc] initWithTitle:@"Bookmarks" style:UIBarButtonItemStylePlain target:nil action:@selector(visitBookmarks)];
+    self.navigationItem.rightBarButtonItem = bookmarkButton;
     
     [self.searchBar becomeFirstResponder];
     self.searchBar.delegate = self;
-//    self.tapGestureRecognizer.delegate = self;
+    self.placesTable.allowsMultipleSelectionDuringEditing = NO;
     
     [self updateLocation];
     // Do any additional setup after loading the view.
@@ -77,9 +83,16 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
     return _apiKey;
 }
 
+
+#pragma mark - Navigation
+- (void)visitBookmarks {
+    BookmarkViewController *bookmarkViewController = [[BookmarkViewController alloc] init];
+    [self.navigationController pushViewController:bookmarkViewController animated:YES];
+}
+
+
 #pragma mark - Location
 - (void)updateLocation {
-//    [self.locationManager setDelegate:self];
     self.locationManager.delegate = self;
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     self.locationManager.distanceFilter = 500;
@@ -113,7 +126,6 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
 
 
 #pragma mark - UISearchBarDelegate
-
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     NSLog(@"Search Button Clicked");
     NSLog(@"value: %@", searchBar.text);
@@ -129,7 +141,6 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
 
 
 #pragma mark - Search Places
-
 - (void)searchPlace:(NSString *)query {
     query = [NSString stringWithFormat:@"&keyword=%@", query];
     NSString *locationQuery = [NSString stringWithFormat:@"location=%@,%@&radius=300", self.currentLocation[@"latitude"], self.currentLocation[@"longitude"]];
@@ -176,10 +187,48 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
     
     if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     NSDictionary *data = [self.places objectAtIndex:indexPath.row];
-    [self setTapGesture:cell];
     cell.textLabel.text = data[@"name"];
     
+    [self setTapGesture:cell];
+    
     return cell;
+}
+
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+
+- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewRowAction *bookmarkAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault
+                                                                              title:@"Bookmark"
+                                                                            handler:^(UITableViewRowAction *action, NSIndexPath *indexPath){
+                                                                                [self insertBookmark:[self.places objectAtIndex:indexPath.row]];
+                                                                            }];
+    
+    return @[bookmarkAction];
+}
+
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView reloadData];
+}
+
+
+#pragma mark - Create Bookmark
+- (void)insertBookmark:(NSDictionary *)data {
+    NSLog(@"Data: %@", data);
+
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    
+    Bookmark *bookmark = [Bookmark MR_createInContext:context];
+    bookmark.name = data[@"name"];
+    bookmark.vicinity = data[@"vicinity"];
+    bookmark.latitude = [[[data objectForKey:@"geometry"] objectForKey:@"location"] objectForKey:@"lat"];
+    bookmark.longitude = [[[data objectForKey:@"geometry"] objectForKey:@"location"] objectForKey:@"lng"];
+    
+    [context MR_saveOnlySelfAndWait];
 }
 
 
@@ -192,7 +241,7 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
 
 
 - (IBAction)handleTapGesture:(UITapGestureRecognizer *)recognizer {
-    NSLog(@"TapGesture!");
+//    NSLog(@"TapGesture!");
     
     NSIndexPath *indexPath = [self.placesTable indexPathForCell:(UITableViewCell *)recognizer.view];
     NSDictionary *data = [self.places objectAtIndex:indexPath.row];

@@ -32,6 +32,10 @@
 		885B5AC71A89EFF3007FAC48 /* keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 885B5AC61A89EFF3007FAC48 /* keys.plist */; };
 		885B5ACE1A89FF2C007FAC48 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 885B5ACD1A89FF2C007FAC48 /* CoreText.framework */; };
 		885B5AD41A8A0024007FAC48 /* MapDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 885B5AD31A8A0024007FAC48 /* MapDisplayViewController.m */; };
+		885B5ADA1A8B32D1007FAC48 /* Bookmarks.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 885B5AD81A8B32D1007FAC48 /* Bookmarks.xcdatamodeld */; };
+		885B5ADD1A8B59D4007FAC48 /* Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 885B5ADC1A8B59D4007FAC48 /* Bookmark.m */; };
+		885B5AE51A8B63F2007FAC48 /* BookmarkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 885B5AE41A8B63F2007FAC48 /* BookmarkViewController.m */; };
+		885B5AE71A8B6401007FAC48 /* BookmarkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 885B5AE61A8B6401007FAC48 /* BookmarkView.xib */; };
 		E29529CEDE34E8DFCAC0A295 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4156C6D7469BB806CD668852 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -82,6 +86,12 @@
 		885B5ACD1A89FF2C007FAC48 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		885B5AD21A8A0024007FAC48 /* MapDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MapDisplayViewController.h; path = Controllers/MapDisplayViewController.h; sourceTree = "<group>"; };
 		885B5AD31A8A0024007FAC48 /* MapDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MapDisplayViewController.m; path = Controllers/MapDisplayViewController.m; sourceTree = "<group>"; };
+		885B5AD91A8B32D1007FAC48 /* Bookmarks.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Bookmarks.xcdatamodel; sourceTree = "<group>"; };
+		885B5ADB1A8B59D4007FAC48 /* Bookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bookmark.h; path = Models/Bookmark.h; sourceTree = "<group>"; };
+		885B5ADC1A8B59D4007FAC48 /* Bookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Bookmark.m; path = Models/Bookmark.m; sourceTree = "<group>"; };
+		885B5AE31A8B63F2007FAC48 /* BookmarkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BookmarkViewController.h; path = Controllers/BookmarkViewController.h; sourceTree = "<group>"; };
+		885B5AE41A8B63F2007FAC48 /* BookmarkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BookmarkViewController.m; path = Controllers/BookmarkViewController.m; sourceTree = "<group>"; };
+		885B5AE61A8B6401007FAC48 /* BookmarkView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarkView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +171,7 @@
 		8843A4C81A885EBA0036C241 /* PlaceSearch */ = {
 			isa = PBXGroup;
 			children = (
+				885B5AD71A8B3298007FAC48 /* Models */,
 				8843A4EF1A885FDB0036C241 /* Controllers */,
 				8843A4F01A885FE30036C241 /* Views */,
 				8843A4D01A885EBA0036C241 /* ViewController.h */,
@@ -209,6 +220,8 @@
 				8843A5021A8888310036C241 /* PlaceListViewController.m */,
 				885B5AD21A8A0024007FAC48 /* MapDisplayViewController.h */,
 				885B5AD31A8A0024007FAC48 /* MapDisplayViewController.m */,
+				885B5AE31A8B63F2007FAC48 /* BookmarkViewController.h */,
+				885B5AE41A8B63F2007FAC48 /* BookmarkViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -217,8 +230,19 @@
 			isa = PBXGroup;
 			children = (
 				8843A5361A888BA60036C241 /* PlaceListView.xib */,
+				885B5AE61A8B6401007FAC48 /* BookmarkView.xib */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		885B5AD71A8B3298007FAC48 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				885B5AD81A8B32D1007FAC48 /* Bookmarks.xcdatamodeld */,
+				885B5ADB1A8B59D4007FAC48 /* Bookmark.h */,
+				885B5ADC1A8B59D4007FAC48 /* Bookmark.m */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 		C895DA189C0DA9A62843DCB6 /* Pods */ = {
@@ -315,6 +339,7 @@
 				8843A4D51A885EBA0036C241 /* Main.storyboard in Resources */,
 				8843A4DA1A885EBA0036C241 /* LaunchScreen.xib in Resources */,
 				885B5AC71A89EFF3007FAC48 /* keys.plist in Resources */,
+				885B5AE71A8B6401007FAC48 /* BookmarkView.xib in Resources */,
 				8843A5371A888BA60036C241 /* PlaceListView.xib in Resources */,
 				8843A4D71A885EBA0036C241 /* Images.xcassets in Resources */,
 				885B5AAD1A89EA19007FAC48 /* GoogleMaps.bundle in Resources */,
@@ -368,11 +393,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				885B5AE51A8B63F2007FAC48 /* BookmarkViewController.m in Sources */,
 				8843A5031A8888310036C241 /* PlaceListViewController.m in Sources */,
 				8843A4D21A885EBA0036C241 /* ViewController.m in Sources */,
 				8843A4CF1A885EBA0036C241 /* AppDelegate.m in Sources */,
+				885B5ADD1A8B59D4007FAC48 /* Bookmark.m in Sources */,
 				885B5AD41A8A0024007FAC48 /* MapDisplayViewController.m in Sources */,
 				8843A4CC1A885EBA0036C241 /* main.m in Sources */,
+				885B5ADA1A8B32D1007FAC48 /* Bookmarks.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -587,6 +615,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		885B5AD81A8B32D1007FAC48 /* Bookmarks.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				885B5AD91A8B32D1007FAC48 /* Bookmarks.xcdatamodel */,
+			);
+			currentVersion = 885B5AD91A8B32D1007FAC48 /* Bookmarks.xcdatamodel */;
+			name = Bookmarks.xcdatamodeld;
+			path = Models/Bookmarks.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 8843A4BE1A885EBA0036C241 /* Project object */;
 }
