@@ -8,10 +8,11 @@
 
 #import <CoreData+MagicalRecord.h>
 #import "BookmarkViewController.h"
+#import "MapDisplayViewController.h"
 #import "Bookmark.h"
 
 
-@interface BookmarkViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface BookmarkViewController () <UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) NSMutableArray *bookmarks;
 @property (nonatomic, weak) IBOutlet UITableView *bookmarkTable;
@@ -24,6 +25,8 @@
     [super viewDidLoad];
     [self setTitle:@"Bookmarks"];
     [self displayBookmarks];
+    
+    self.bookmarkTable.allowsMultipleSelectionDuringEditing = NO;
     // Do any additional setup after loading the view.
 }
 
@@ -42,22 +45,18 @@
 
 #pragma mark - Display records
 - (void)displayBookmarks {
-    self.bookmarks = (NSMutableArray *)[Bookmark MR_findAllSortedBy:@"name" ascending:YES];
-//    NSLog(@"Bookmarks: %@", self.bookmarks);
-    NSLog(@"Count: %lu", [self.bookmarks count]);
+    self.bookmarks = (NSMutableArray *)[[Bookmark MR_findAllSortedBy:@"name" ascending:YES] mutableCopy];
     [self.bookmarkTable reloadData];
 }
 
 
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSLog(@"HERE!");
     return [self.bookmarks count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"Load Table");
     NSString *identifier = @"BookmarkResults";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     
@@ -65,8 +64,59 @@
     Bookmark *bookmark = [self.bookmarks objectAtIndex:indexPath.row];
     cell.textLabel.text = bookmark.name;
     
+    [self setTapGesture:cell];
+    
     return cell;
 }
+
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleDelete;
+}
+
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+        
+        Bookmark *bookmark = [self.bookmarks objectAtIndex:indexPath.row];
+        [bookmark MR_deleteInContext:context];
+        [context MR_saveToPersistentStoreAndWait];
+        
+        [self.bookmarks removeObjectAtIndex:indexPath.row];
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
+
+
+#pragma mark - Gestures
+- (void)setTapGesture:(UITableViewCell *)cell {
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+    tapGestureRecognizer.delegate = self;
+    [cell addGestureRecognizer:tapGestureRecognizer];
+}
+
+
+- (IBAction)handleTapGesture:(UITapGestureRecognizer *)recognizer {
+    NSIndexPath *indexPath = [self.bookmarkTable indexPathForCell:(UITableViewCell *)recognizer.view];
+    Bookmark *bookmark = [self.bookmarks objectAtIndex:indexPath.row];
+    NSMutableDictionary *location = [[NSMutableDictionary alloc] init];
+    
+    [location setObject:bookmark.name forKey:@"name"];
+    [location setObject:bookmark.vicinity forKey:@"vicinity"];
+    [location setObject:bookmark.latitude forKey:@"latitude"];
+    [location setObject:bookmark.longitude forKey:@"longitude"];
+    
+    MapDisplayViewController *mapDisplayViewController = [[MapDisplayViewController alloc] init];
+    [mapDisplayViewController setLocation:location];
+    [self.navigationController pushViewController:mapDisplayViewController animated:YES];
+}
+
 
 
 /*

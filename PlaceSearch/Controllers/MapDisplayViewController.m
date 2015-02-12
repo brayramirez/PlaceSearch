@@ -47,9 +47,11 @@
 - (void)showMap {
     GMSMapView *mapView;
     
-    CLLocationDegrees latitude = [[[[self.location objectForKey:@"geometry"] objectForKey:@"location"] objectForKey:@"lat"] doubleValue];
-    CLLocationDegrees longitude = [[[[self.location objectForKey:@"geometry"] objectForKey:@"location"] objectForKey:@"lng"] doubleValue];
+    CLLocationDegrees latitude = [[self.location objectForKey:@"latitude"] doubleValue];
+    CLLocationDegrees longitude = [[self.location objectForKey:@"longitude"] doubleValue];
     
+    NSLog(@"%f x %f", latitude, longitude);
+   
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:latitude longitude:longitude zoom:18];
     
     mapView = [GMSMapView mapWithFrame:CGRectZero camera:camera];

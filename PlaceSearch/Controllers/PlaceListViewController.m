@@ -133,10 +133,11 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
 }
 
 
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    // Not sure if this is needed.
-    NSLog(@"Search Cancel Button Clicked");
-    searchBar.text = @"";
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    if ([searchText isEqualToString:@""]) {
+        [self.places removeAllObjects];
+        [self.placesTable reloadData];
+    }
 }
 
 
@@ -154,19 +155,14 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
     
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *response = (NSMutableDictionary *)responseObject;
-        self.places = response[@"results"];
+        self.places = (NSMutableArray *)[response[@"results"] mutableCopy];
 
         NSLog(@"Place search success!");
 //        NSLog(@"Results: %@", self.places);
         
         [self.placesTable reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error Searching Places"
-                                                            message:[error localizedDescription]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-        [alertView show];
+        [self showAlertWithTitle:@"Error Searching Places" withMessage:[error localizedDescription]];
     }];
     
     [operation start];
@@ -180,8 +176,6 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"TableView!");
-    
     NSString *identifier = @"Results";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     
@@ -204,7 +198,8 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
     UITableViewRowAction *bookmarkAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault
                                                                               title:@"Bookmark"
                                                                             handler:^(UITableViewRowAction *action, NSIndexPath *indexPath){
-                                                                                [self insertBookmark:[self.places objectAtIndex:indexPath.row]];
+                                                                                [self createBookmark:[self.places objectAtIndex:indexPath.row]];
+                                                                                [tableView setEditing:NO animated:YES];
                                                                             }];
     
     return @[bookmarkAction];
@@ -217,10 +212,10 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
 
 
 #pragma mark - Create Bookmark
-- (void)insertBookmark:(NSDictionary *)data {
+- (void)createBookmark:(NSDictionary *)data {
     NSLog(@"Data: %@", data);
 
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
     
     Bookmark *bookmark = [Bookmark MR_createInContext:context];
     bookmark.name = data[@"name"];
@@ -229,6 +224,8 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
     bookmark.longitude = [[[data objectForKey:@"geometry"] objectForKey:@"location"] objectForKey:@"lng"];
     
     [context MR_saveOnlySelfAndWait];
+    
+    [self showAlertWithTitle:@"Bookmark" withMessage:@"Bookmark has been saved."];
 }
 
 
@@ -241,18 +238,28 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
 
 
 - (IBAction)handleTapGesture:(UITapGestureRecognizer *)recognizer {
-//    NSLog(@"TapGesture!");
-    
     NSIndexPath *indexPath = [self.placesTable indexPathForCell:(UITableViewCell *)recognizer.view];
     NSDictionary *data = [self.places objectAtIndex:indexPath.row];
-
-//    NSLog(@"CellData: %@", data);
+    NSMutableDictionary *location = [[NSMutableDictionary alloc] init];
+    
+    [location setObject:[data objectForKey:@"name"] forKey:@"name"];
+    [location setObject:[data objectForKey:@"vicinity"] forKey:@"vicinity"];
+    [location setObject:[[[data objectForKey:@"geometry"] objectForKey:@"location"] objectForKey:@"lat"] forKey:@"latitude"];
+    [location setObject:[[[data objectForKey:@"geometry"] objectForKey:@"location"] objectForKey:@"lng"] forKey:@"longitude"];
+    
+    NSLog(@"Location: %@", location);
     
     MapDisplayViewController *mapDisplayViewController = [[MapDisplayViewController alloc] init];
-    [mapDisplayViewController setLocation:data];
+    [mapDisplayViewController setLocation:location];
     [self.navigationController pushViewController:mapDisplayViewController animated:YES];
 }
 
+
+#pragma mark - Alert Method
+- (void)showAlertWithTitle:(NSString *)title withMessage:(NSString *)message {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alertView show];
+}
 
 /*
 #pragma mark - Navigation

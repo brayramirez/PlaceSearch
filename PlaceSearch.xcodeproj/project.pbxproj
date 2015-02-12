@@ -216,12 +216,12 @@
 		8843A4EF1A885FDB0036C241 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				885B5AE31A8B63F2007FAC48 /* BookmarkViewController.h */,
+				885B5AE41A8B63F2007FAC48 /* BookmarkViewController.m */,
 				8843A5011A8888310036C241 /* PlaceListViewController.h */,
 				8843A5021A8888310036C241 /* PlaceListViewController.m */,
 				885B5AD21A8A0024007FAC48 /* MapDisplayViewController.h */,
 				885B5AD31A8A0024007FAC48 /* MapDisplayViewController.m */,
-				885B5AE31A8B63F2007FAC48 /* BookmarkViewController.h */,
-				885B5AE41A8B63F2007FAC48 /* BookmarkViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
