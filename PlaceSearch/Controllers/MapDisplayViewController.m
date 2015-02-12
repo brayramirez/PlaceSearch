@@ -18,7 +18,7 @@
 
 
 - (void)viewDidLoad {
-//    [super viewDidLoad];
+    [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self setTitle:@"Map View"];
     
@@ -49,8 +49,6 @@
     
     CLLocationDegrees latitude = [[self.location objectForKey:@"latitude"] doubleValue];
     CLLocationDegrees longitude = [[self.location objectForKey:@"longitude"] doubleValue];
-    
-    NSLog(@"%f x %f", latitude, longitude);
    
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:latitude longitude:longitude zoom:18];
     

@@ -33,18 +33,14 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self setTitle:@"Place Search"];
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
-    UIBarButtonItem *bookmarkButton = [[UIBarButtonItem alloc] initWithTitle:@"Bookmarks" style:UIBarButtonItemStylePlain target:nil action:@selector(visitBookmarks)];
-    self.navigationItem.rightBarButtonItem = bookmarkButton;
+
+    // Do any additional setup after loading the view.
+    [self setNavigationItems];
     
     [self.searchBar becomeFirstResponder];
-    self.searchBar.delegate = self;
     self.placesTable.allowsMultipleSelectionDuringEditing = NO;
     
     [self updateLocation];
-    // Do any additional setup after loading the view.
 }
 
 
@@ -85,6 +81,14 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
 
 
 #pragma mark - Navigation
+- (void)setNavigationItems {
+    [self setTitle:@"Place Search"];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
+    UIBarButtonItem *bookmarkButton = [[UIBarButtonItem alloc] initWithTitle:@"Bookmarks" style:UIBarButtonItemStylePlain target:nil action:@selector(visitBookmarks)];
+    self.navigationItem.rightBarButtonItem = bookmarkButton;
+}
+
+
 - (void)visitBookmarks {
     BookmarkViewController *bookmarkViewController = [[BookmarkViewController alloc] init];
     [self.navigationController pushViewController:bookmarkViewController animated:YES];
@@ -157,7 +161,7 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
         NSDictionary *response = (NSMutableDictionary *)responseObject;
         self.places = (NSMutableArray *)[response[@"results"] mutableCopy];
 
-        NSLog(@"Place search success!");
+//        NSLog(@"Place search success!");
 //        NSLog(@"Results: %@", self.places);
         
         [self.placesTable reloadData];
@@ -213,7 +217,7 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
 
 #pragma mark - Create Bookmark
 - (void)createBookmark:(NSDictionary *)data {
-    NSLog(@"Data: %@", data);
+//    NSLog(@"Data: %@", data);
 
     NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
     

@@ -23,11 +23,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setTitle:@"Bookmarks"];
-    [self displayBookmarks];
-    
-    self.bookmarkTable.allowsMultipleSelectionDuringEditing = NO;
+
     // Do any additional setup after loading the view.
+    [self setTitle:@"Bookmarks"];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
+    
+    [self displayBookmarks];
+    self.bookmarkTable.allowsMultipleSelectionDuringEditing = NO;
 }
 
 - (void)didReceiveMemoryWarning {
