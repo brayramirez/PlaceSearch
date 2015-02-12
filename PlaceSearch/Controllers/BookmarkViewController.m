@@ -25,8 +25,8 @@
     [super viewDidLoad];
 
     // Do any additional setup after loading the view.
-    [self setTitle:@"Bookmarks"];
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
+    [self.tabBarController.navigationItem setTitle:@"Bookmark"];
+//    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
     
     [self displayBookmarks];
     self.bookmarkTable.allowsMultipleSelectionDuringEditing = NO;

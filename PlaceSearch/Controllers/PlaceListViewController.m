@@ -35,7 +35,8 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
     [super viewDidLoad];
 
     // Do any additional setup after loading the view.
-    [self setNavigationItems];
+//    [self setNavigationItems];
+    [self.tabBarController.navigationItem setTitle:@"Search"];
     
     [self.searchBar becomeFirstResponder];
     self.placesTable.allowsMultipleSelectionDuringEditing = NO;
@@ -82,10 +83,10 @@ static const NSString *BASE_URL = @"https://maps.googleapis.com/maps/api/place/n
 
 #pragma mark - Navigation
 - (void)setNavigationItems {
-    [self setTitle:@"Place Search"];
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
-    UIBarButtonItem *bookmarkButton = [[UIBarButtonItem alloc] initWithTitle:@"Bookmarks" style:UIBarButtonItemStylePlain target:nil action:@selector(visitBookmarks)];
-    self.navigationItem.rightBarButtonItem = bookmarkButton;
+//    [self setTitle:@"Place Search"];
+//    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
+//    UIBarButtonItem *bookmarkButton = [[UIBarButtonItem alloc] initWithTitle:@"Bookmarks" style:UIBarButtonItemStylePlain target:nil action:@selector(visitBookmarks)];
+//    self.navigationItem.rightBarButtonItem = bookmarkButton;
 }
 
 

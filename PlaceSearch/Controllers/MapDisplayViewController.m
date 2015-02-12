@@ -20,7 +20,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self setTitle:@"Map View"];
+//    [self setTitle:@"Map View"];
+    [self.tabBarController.navigationItem setTitle:@"Map"];
     
     [self showMap];
 }
